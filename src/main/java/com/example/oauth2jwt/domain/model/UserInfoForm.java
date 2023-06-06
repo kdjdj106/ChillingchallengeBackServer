@@ -1,7 +1,9 @@
 package com.example.oauth2jwt.domain.model;
 
-import com.example.oauth2jwt.domain.entity.User;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 public class UserInfoForm {

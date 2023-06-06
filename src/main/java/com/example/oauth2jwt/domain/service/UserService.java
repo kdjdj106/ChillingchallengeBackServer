@@ -6,21 +6,19 @@ import com.example.oauth2jwt.domain.entity.BoardMission1;
 import com.example.oauth2jwt.domain.entity.BoardMission2;
 import com.example.oauth2jwt.domain.entity.BoardMission3;
 import com.example.oauth2jwt.domain.entity.User;
-import com.example.oauth2jwt.domain.model.CompleteMissionForm;
-import com.example.oauth2jwt.domain.model.ShowHistoryForm;
-import com.example.oauth2jwt.domain.model.UserInfoForm;
+import com.example.oauth2jwt.domain.model.ShowFeedToFrontForm;
 import com.example.oauth2jwt.domain.repository.BoardMission1Repository;
 import com.example.oauth2jwt.domain.repository.BoardMission2Repository;
 import com.example.oauth2jwt.domain.repository.BoardMission3Repository;
 import com.example.oauth2jwt.domain.repository.UserRepository;
 import com.example.oauth2jwt.domain.type.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -62,27 +60,34 @@ public class UserService {
         return infoDto;
     }
 
+//    public String getUserCode(){
+//
+//    }
     // 유저 프로필 이미지 변경 필요
 
 
     // 유저 히스토리(피드) 정보 추출
-    public List<ShowHistoryForm> showMyHistory(String usercode){
-        ShowHistoryForm form = null;
+    public List<ShowFeedToFrontForm> showMyHistory(String usercode){
 
-        List<ShowHistoryForm> myHistory = new ArrayList<>();
+
+        List<ShowFeedToFrontForm> myHistory = new ArrayList<>();
         User user = userRepository.findByUsercode(usercode).get();
 
 
         List<BoardMission1> list1 = new ArrayList<>();
         list1 = boardMission1Repository.findByUser(user);
         if (list1 != null){
-            for (BoardMission1 boardMission1 : list1) {
-                form.setMissionNum(1);
-                form.setCreatedDt(boardMission1.getCreatedDt());
-                form.setMission1title(boardMission1.getTitle());
-                form.setMission1comment1(boardMission1.getComment1());
-                form.setMission1comment2(boardMission1.getComment2());
-                form.setMission1subTitle(boardMission1.getSubTitle());
+
+            for (int i = 0; i < list1.size(); i++) {
+                ShowFeedToFrontForm form = new ShowFeedToFrontForm();
+                form.setMissionId(list1.get(i).getMissionId());
+                List<String> stringAndPath = new ArrayList<>();
+                stringAndPath.add(list1.get(i).getImagePath());
+                stringAndPath.add(list1.get(i).getComment1());
+                stringAndPath.add(list1.get(i).getComment2());
+                form.setUuid(list1.get(i).getUuid());
+                form.setStringAndPath(stringAndPath);
+                form.setLocalDateTime(list1.get(i).getCreatedDt());
 
                 myHistory.add(form);
             }
@@ -92,37 +97,45 @@ public class UserService {
 
         List<BoardMission2> list2 = new ArrayList<>();
         list2 = boardMission2Repository.findByUser(user);
-       if (list2 != null){
-           for (BoardMission2 boardMission2 : list2){
-               form.setMissionNum(2);
-               form.setCreatedDt(boardMission2.getCreatedDt());
-               form.setMission2title(boardMission2.getTitle());
-               form.setMission2subTitle(boardMission2.getSubTitle());
-               form.setMission2comment1(boardMission2.getComment1());
-               form.setMission2comment2(boardMission2.getComment2());
-               form.setMission2comment3(boardMission2.getComment3());
-               form.setMission2comment4(boardMission2.getComment4());
+        if (list2 != null){
 
-               myHistory.add(form);
-           }
-       }
+            for (int i = 0; i < list2.size(); i++) {
+                ShowFeedToFrontForm form = new ShowFeedToFrontForm();
+                form.setMissionId(list2.get(i).getMissionId());
+                List<String> stringAndPath = new ArrayList<>();
+                stringAndPath.add(list2.get(i).getComment1());
+                stringAndPath.add(list2.get(i).getComment2());
+                form.setUuid(list2.get(i).getUuid());
+                form.setStringAndPath(stringAndPath);
+                form.setLocalDateTime(list2.get(i).getCreatedDt());
+
+                myHistory.add(form);
+            }
+
+        }
 
         List<BoardMission3> list3 = new ArrayList<>();
         list3 = boardMission3Repository.findByUser(user);
         if (list3 != null){
-            for (BoardMission3 boardMission3 : list3){
-                form.setMissionNum(2);
-                form.setCreatedDt(boardMission3.getCreatedDt());
-                form.setMission3title(boardMission3.getTitle());
-                form.setMission3subTitle(boardMission3.getSubTitle());
-                form.setMission3comment1(boardMission3.getComment1());
-                form.setMission3comment2(boardMission3.getComment2());
-                form.setMission3filename(boardMission3.getFilename());
-                form.setMission3filepath(boardMission3.getFilepath());
+
+            for (int i = 0; i < list3.size(); i++) {
+                ShowFeedToFrontForm form = new ShowFeedToFrontForm();
+                form.setMissionId(list3.get(i).getMissionId());
+                List<String> stringAndPath = new ArrayList<>();
+                stringAndPath.add(list3.get(i).getComment1());
+                stringAndPath.add(list3.get(i).getComment2());
+                stringAndPath.add(list3.get(i).getComment3());
+                stringAndPath.add(list3.get(i).getComment4());
+                form.setUuid(list3.get(i).getUuid());
+                form.setStringAndPath(stringAndPath);
+                form.setLocalDateTime(list3.get(i).getCreatedDt());
 
                 myHistory.add(form);
             }
+
         }
+
+        myHistory.sort(Comparator.comparing(ShowFeedToFrontForm::getLocalDateTime));
 
         return myHistory;
     }

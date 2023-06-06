@@ -2,16 +2,15 @@ package com.example.oauth2jwt.domain.controller;
 
 import com.example.oauth2jwt.domain.dto.UserInfoDto;
 import com.example.oauth2jwt.domain.dto.UserSignUpDto;
-import com.example.oauth2jwt.domain.model.CompleteMissionForm;
-import com.example.oauth2jwt.domain.model.CompleteMissionFormDemo;
+import com.example.oauth2jwt.domain.model.CompleteMissionToBackForm;
 import com.example.oauth2jwt.domain.model.UserInfoForm;
 import com.example.oauth2jwt.domain.service.MissionService;
 import com.example.oauth2jwt.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,15 +30,11 @@ public class UserController {
     }
 
     @PostMapping("/completeMission")
-    public ResponseEntity<?> completeMission(@RequestBody CompleteMissionForm form) throws Exception {
+    public ResponseEntity<?> completeMission(@RequestBody List<CompleteMissionToBackForm> list) throws Exception {
 
-        return ResponseEntity.ok( missionService.completeMission(form));
+        return ResponseEntity.ok( missionService.completeMission(list));
     }
-    @PostMapping("/completeMissionDemo")
-    public ResponseEntity<?> completeMission(@ModelAttribute CompleteMissionFormDemo demo, @RequestPart MultipartFile image) throws Exception {
-        CompleteMissionFormDemo demo1 = demo;
-        return ResponseEntity.ok( missionService.completeMissionDemo(image, demo));
-    }
+
 
     @PostMapping("/showMyHistory")
     public ResponseEntity<?>  showMyHistory(@RequestParam(value = "code") String usercode){
@@ -56,5 +51,11 @@ public class UserController {
                 infoDto.getAttendance(),
                 infoDto.getContinuous()
         ));
+    }
+
+    @PostMapping("/test")
+    public String test(@RequestBody List<CompleteMissionToBackForm> list){
+        List<CompleteMissionToBackForm> testlist = list;
+        return "ok";
     }
 }

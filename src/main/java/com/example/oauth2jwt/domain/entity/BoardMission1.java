@@ -1,6 +1,5 @@
 package com.example.oauth2jwt.domain.entity;
 
-import com.example.oauth2jwt.domain.model.CompleteMissionForm;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,14 +18,16 @@ public class BoardMission1 {
     @Column(name = "boardId")
     private Long id;
 
-    private String title;
-    private String subTitle;
+    private Integer missionId;
+    private String imagePath;
     private String comment1;
     private String comment2;
 
 
     private LocalDateTime createdDt;
     private LocalDateTime updatedDt;
+
+    private String uuid;
 
     @ManyToOne
     @JoinColumn(name = "usercode")
