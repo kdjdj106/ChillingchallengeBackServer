@@ -32,7 +32,7 @@ public class User {
     private int missionCnt; // 총 미션 수행 갯수
 
 
-    private String attendance = ""; // 출석 날짜들 (달력을 위해)
+    private String attendance; // 출석 날짜들 (달력을 위해)
 
     @ColumnDefault("false")
     private boolean todayCheck; // 오늘 미션을 했는지 체크 밤 11시쯤 체크예정
