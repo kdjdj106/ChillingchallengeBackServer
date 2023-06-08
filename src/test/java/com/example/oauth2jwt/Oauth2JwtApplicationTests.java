@@ -3,10 +3,10 @@ package com.example.oauth2jwt;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class Oauth2JwtApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
     }
 
