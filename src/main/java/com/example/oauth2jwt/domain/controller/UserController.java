@@ -1,15 +1,15 @@
 package com.example.oauth2jwt.domain.controller;
 
 import com.example.oauth2jwt.domain.dto.UserInfoDto;
-import com.example.oauth2jwt.domain.dto.UserSignUpDto;
-import com.example.oauth2jwt.domain.model.CompleteMissionToBackForm;
-import com.example.oauth2jwt.domain.model.UserInfoForm;
+import com.example.oauth2jwt.domain.dto.UserSignUpDto;import com.example.oauth2jwt.domain.entity.User;
+import com.example.oauth2jwt.domain.model.*;
 import com.example.oauth2jwt.domain.service.MissionService;
 import com.example.oauth2jwt.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,6 +17,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
     private final MissionService missionService;
+    private  List<ShowFeedToFrontForm> myHistory;
 
     @PostMapping("/sign-up")
     public String signUp(@RequestBody UserSignUpDto userSignUpDto) throws Exception {
@@ -36,12 +37,24 @@ public class UserController {
     }
 
 
-    @PostMapping("/showMyHistory")
-    public ResponseEntity<?>  showMyHistory(@RequestParam(value = "code") String usercode){
-        return ResponseEntity.ok(userService.showMyHistory(usercode));
+    @GetMapping("/showMyHistory")
+    public ResponseEntity<List<ShowFeedToFrontForm>> getHistoryPage(@RequestParam(value = "code") String usercode,
+                                                                    @RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "10") int size) {
+        myHistory = userService.getMyHistory(usercode);
+        int startIndex = page * size;
+        int endIndex = Math.min(startIndex + size, myHistory.size());
+
+        if (startIndex > endIndex) {
+            // 페이지 범위가 데이터 크기를 초과하는 경우 빈 결과 반환
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        List<ShowFeedToFrontForm> pageData = myHistory.subList(startIndex, endIndex);
+        return ResponseEntity.ok(pageData);
     }
 
-    @PostMapping("/showMyInfo")
+    @GetMapping("/showMyInfo")
     public ResponseEntity<UserInfoForm.Response>  showMyInfo(@RequestParam(value = "code") String usercode){
         UserInfoDto infoDto = userService.showMyInfo(usercode);
 
@@ -49,7 +62,8 @@ public class UserController {
                 infoDto.getNickname(),
                 infoDto.getMissionCnt(),
                 infoDto.getAttendance(),
-                infoDto.getContinuous()
+                infoDto.getContinuous(),
+                infoDto.getProfileImagePath()
         ));
     }
 
@@ -57,5 +71,18 @@ public class UserController {
     public String test(@RequestBody List<CompleteMissionToBackForm> list){
         List<CompleteMissionToBackForm> testlist = list;
         return "ok";
+    }
+
+    @PutMapping("/update/nickname/{usercode}")
+    public ResponseEntity<User> updateUserNickname(@PathVariable String usercode,
+                                           @RequestBody UserNicknameUpdateRequest request) {
+
+        return ResponseEntity.ok(userService.updateUserNickname(usercode,request));
+    }
+    @PutMapping("/update/imageUrl/{usercode}")
+    public ResponseEntity<User> updateUserImageUrl(@PathVariable String usercode,
+                                                   @RequestBody UserImageUrlUpdateRequest request) {
+
+        return ResponseEntity.ok(userService.updateUserImageUrl(usercode,request));
     }
 }

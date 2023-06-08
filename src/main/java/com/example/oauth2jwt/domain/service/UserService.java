@@ -7,12 +7,17 @@ import com.example.oauth2jwt.domain.entity.BoardMission2;
 import com.example.oauth2jwt.domain.entity.BoardMission3;
 import com.example.oauth2jwt.domain.entity.User;
 import com.example.oauth2jwt.domain.model.ShowFeedToFrontForm;
+import com.example.oauth2jwt.domain.model.UserImageUrlUpdateRequest;
+import com.example.oauth2jwt.domain.model.UserNicknameUpdateRequest;
 import com.example.oauth2jwt.domain.repository.BoardMission1Repository;
 import com.example.oauth2jwt.domain.repository.BoardMission2Repository;
 import com.example.oauth2jwt.domain.repository.BoardMission3Repository;
 import com.example.oauth2jwt.domain.repository.UserRepository;
 import com.example.oauth2jwt.domain.type.Role;
+import com.example.oauth2jwt.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -60,14 +66,32 @@ public class UserService {
         return infoDto;
     }
 
-//    public String getUserCode(){
-//
-//    }
-    // 유저 프로필 이미지 변경 필요
+    public User updateUserNickname(String usercode, UserNicknameUpdateRequest request){
+        Optional<User> optionalUser = userRepository.findByUsercode(usercode);
 
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optionalUser.get();
+        user.setNickname(request.getNickname());
+        return userRepository.save(user);
+    }
+    // 유저 프로필 이미지 변경 필요
+    public User updateUserImageUrl(String usercode, UserImageUrlUpdateRequest request){
+        Optional<User> optionalUser = userRepository.findByUsercode(usercode);
+
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optionalUser.get();
+        user.setNickname(request.getImageUrl());
+        return userRepository.save(user);
+    }
 
     // 유저 히스토리(피드) 정보 추출
-    public List<ShowFeedToFrontForm> showMyHistory(String usercode){
+    public List<ShowFeedToFrontForm> getMyHistory(String usercode){
 
 
         List<ShowFeedToFrontForm> myHistory = new ArrayList<>();
