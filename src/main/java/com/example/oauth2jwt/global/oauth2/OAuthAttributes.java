@@ -76,11 +76,17 @@ public class OAuthAttributes {
      * role은 GUEST로 설정
      */
     public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
+        String nickname  = null;
+        if(oauth2UserInfo.getNickname() == null){
+            nickname = UUID.randomUUID().toString();
+        }else {
+            nickname = oauth2UserInfo.getNickname();
+        }
         return User.builder()
                 .socialType(socialType)
                 .socialId(oauth2UserInfo.getId())
                 .email(UUID.randomUUID() + "@socialUser.com")
-                .nickname(oauth2UserInfo.getNickname())
+                .nickname(nickname)
                 .imageUrl(oauth2UserInfo.getImageUrl())
                 //.attendance("")
                 .usercode(socialType+"_"+oauth2UserInfo.getId())
