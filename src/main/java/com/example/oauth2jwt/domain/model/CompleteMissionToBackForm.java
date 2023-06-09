@@ -15,5 +15,4 @@ public class CompleteMissionToBackForm {
     private List<String> stringAndPath;
     // 미션1  (단순 텍스트)
 
-
 }

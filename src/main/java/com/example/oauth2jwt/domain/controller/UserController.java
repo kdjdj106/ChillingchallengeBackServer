@@ -42,6 +42,7 @@ public class UserController {
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size) {
         myHistory = userService.getMyHistory(usercode);
+
         int startIndex = page * size;
         int endIndex = Math.min(startIndex + size, myHistory.size());
 
