@@ -59,15 +59,15 @@ public class UserService {
         userRepository.save(user);
     }
     // 유저 정보 전달
-    public UserInfoDto showMyInfo(String usercode){
-        User user = userRepository.findByUsercode(usercode).get();
+    public UserInfoDto showMyInfo(Long usercode){
+        User user = userRepository.findById(usercode).get();
         UserInfoDto infoDto = UserInfoDto.fromEntity(user);
 
         return infoDto;
     }
 
-    public User updateUserNickname(String usercode, UserNicknameUpdateRequest request){
-        Optional<User> optionalUser = userRepository.findByUsercode(usercode);
+    public User updateUserNickname(Long usercode, UserNicknameUpdateRequest request){
+        Optional<User> optionalUser = userRepository.findById(usercode);
 
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -78,8 +78,8 @@ public class UserService {
         return userRepository.save(user);
     }
     // 유저 프로필 이미지 변경 필요
-    public User updateUserImageUrl(String usercode, UserImageUrlUpdateRequest request){
-        Optional<User> optionalUser = userRepository.findByUsercode(usercode);
+    public User updateUserImageUrl(Long usercode, UserImageUrlUpdateRequest request){
+        Optional<User> optionalUser = userRepository.findById(usercode);
 
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -91,11 +91,11 @@ public class UserService {
     }
 
     // 유저 히스토리(피드) 정보 추출
-    public List<ShowFeedToFrontForm> getMyHistory(String usercode){
+    public List<ShowFeedToFrontForm> getMyHistory(Long usercode){
 
 
         List<ShowFeedToFrontForm> myHistory = new ArrayList<>();
-        User user = userRepository.findByUsercode(usercode).get();
+        User user = userRepository.findById(usercode).get();
 
 
         List<BoardMission1> list1 = new ArrayList<>();

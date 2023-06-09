@@ -37,8 +37,8 @@ public class MissionService {
 
 
     public User completeMission(List<CompleteMissionToBackForm> list) throws Exception {
-        String usercode = list.get(0).getUsercode().toString();
-        Optional<User> optionalUser = userRepository.findByUsercode(usercode);
+        Long usercode = list.get(0).getUsercode();
+        Optional<User> optionalUser = userRepository.findById(usercode);
         // 마지막 출석일자와 오늘을 비교하여연속 출석일수 증가 or 초기화
 
 
@@ -73,7 +73,10 @@ public class MissionService {
 
                 }else {
                     //같다면 공백 과 오늘 날자 추가
-                    user.setAttendance(user.getAttendance()+" "+lastAttendance);
+                    if(user.getLastAttendance() == null){
+                        user.setAttendance(user.getAttendance()+" "+lastAttendance);
+                    }
+
                 }
 
                 // 마지막 출석 일자와 오늘의 일자를 비교하여 연속일수 초기화 및 추가

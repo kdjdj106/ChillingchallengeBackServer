@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CompleteMissionToBackForm {
-    private String usercode;
+    private Long usercode;
     private Integer missionType;
     private Integer missionId;
     private List<String> stringAndPath;

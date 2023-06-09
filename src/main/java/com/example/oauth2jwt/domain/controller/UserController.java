@@ -38,7 +38,7 @@ public class UserController {
 
 
     @GetMapping("/showMyHistory")
-    public ResponseEntity<List<ShowFeedToFrontForm>> getHistoryPage(@RequestParam(value = "code") String usercode,
+    public ResponseEntity<List<ShowFeedToFrontForm>> getHistoryPage(@RequestParam(value = "code") Long usercode,
                                                                     @RequestParam(defaultValue = "0") int page,
                                                                     @RequestParam(defaultValue = "10") int size) {
         myHistory = userService.getMyHistory(usercode);
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @GetMapping("/showMyInfo")
-    public ResponseEntity<UserInfoForm.Response>  showMyInfo(@RequestParam(value = "code") String usercode){
+    public ResponseEntity<UserInfoForm.Response>  showMyInfo(@RequestParam(value = "code") Long usercode){
         UserInfoDto infoDto = userService.showMyInfo(usercode);
 
         return ResponseEntity.ok(new UserInfoForm.Response(
@@ -74,13 +74,13 @@ public class UserController {
     }
 
     @PutMapping("/update/nickname/{usercode}")
-    public ResponseEntity<User> updateUserNickname(@PathVariable String usercode,
+    public ResponseEntity<User> updateUserNickname(@PathVariable Long usercode,
                                            @RequestBody UserNicknameUpdateRequest request) {
 
         return ResponseEntity.ok(userService.updateUserNickname(usercode,request));
     }
     @PutMapping("/update/imageUrl/{usercode}")
-    public ResponseEntity<User> updateUserImageUrl(@PathVariable String usercode,
+    public ResponseEntity<User> updateUserImageUrl(@PathVariable Long usercode,
                                                    @RequestBody UserImageUrlUpdateRequest request) {
 
         return ResponseEntity.ok(userService.updateUserImageUrl(usercode,request));
