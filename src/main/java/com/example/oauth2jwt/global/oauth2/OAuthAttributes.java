@@ -21,8 +21,8 @@ import java.util.UUID;
 @Getter
 public class OAuthAttributes {
 
-    private String nameAttributeKey; // OAuth2 로그인 진행 시 키가 되는 필드 값, PK와 같은 의미
-    private OAuth2UserInfo oauth2UserInfo; // 소셜 타입별 로그인 유저 정보(닉네임, 이메일, 프로필 사진 등등)
+    private final String nameAttributeKey; // OAuth2 로그인 진행 시 키가 되는 필드 값, PK와 같은 의미
+    private final OAuth2UserInfo oauth2UserInfo; // 소셜 타입별 로그인 유저 정보(닉네임, 이메일, 프로필 사진 등등)
 
     @Builder
     public OAuthAttributes(String nameAttributeKey, OAuth2UserInfo oauth2UserInfo) {
@@ -76,7 +76,7 @@ public class OAuthAttributes {
      * role은 GUEST로 설정
      */
     public User toEntity(SocialType socialType, OAuth2UserInfo oauth2UserInfo) {
-        String nickname  = null;
+        String nickname;
         if(oauth2UserInfo.getNickname() == null){
             nickname = UUID.randomUUID().toString();
         }else {
